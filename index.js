@@ -1,22 +1,77 @@
-$(function () {
+if (document.addEventListener) {
+    document.addEventListener("DOMContentLoaded", function () {
+        document.removeEventListener("DOMContentLoaded", arguments.callee, false);
+        app();
+    }, false);
+} else {
+    document.body.innerText = "your browser does not support DOMContentLoaded event. Please use one of modern browsers";
+}
+
+function finder(elements, _index) {
+
+    var index = _index || 0;
+
+    if (!elements) {
+        return finder(document);
+    }
+
+    var current = {};
+    if (!elements.length) {
+        current = elements;
+    } else if (elements.length > 0) {
+        current = elements[index];
+    }
+
+    return {
+        byClass: function (className) {
+            if (current.getElementsByClassName) {
+                return finder(current.getElementsByClassName(className) || {});
+            }
+            return finder({});
+        },
+        byId: function (idName) {
+            if (current.getElementById) {
+                return finder([current.getElementById(idName) || {}]);
+            }
+            return finder({});
+        },
+        elements: function () {
+            return elements;
+        },
+        events: function (domEventName, handler) {
+            if (!elements.length) {
+                elements[domEventName] = handler;
+                return;
+            }
+            for (var i = 0; i < elements.length; i++) {
+                elements[i][domEventName] = handler;
+            }
+        }
+    }
+}
+
+function app() {
 
     var textinput = $("#textinput");
-    var buttons = $(".menu ul li.but");
+    var jButtons = $(".menu ul li.but");
     var errorField = $("#error-field");
 
     bindEvents();
 
     function bindEvents() {
 
-        buttons.on("click", function () {
-            buttons.removeClass('selected');
-            $(this).addClass('selected');
+        finder()
+            .byClass("menu")
+            .byClass("but")
+            .events("onclick", function () {
+                jButtons.removeClass('selected');
+                $(this).addClass('selected');
 
-            reformat(this.value);
-        });
+                reformat(this.value);
+            });
 
         textinput.on("input", function () {
-            reformat(buttons.parent().find(".selected")[0].value);
+            reformat(jButtons.parent().find(".selected")[0].value);
         });
 
     }
@@ -65,6 +120,8 @@ $(function () {
         errorField.removeClass("show");
         textinput.removeClass("error");
     }
-});
+}
+
+
 
 
