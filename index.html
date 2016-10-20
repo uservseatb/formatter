@@ -8,8 +8,9 @@
 
 </head>
 
+<div id="error-field" class="error-field"></div>
 <div class="main">
-    <textarea class="inout-text"></textarea>
+    <textarea id="textinput" placeholder="paste your JSON here" class="inout-text"></textarea>
 </div>
 <div class="menu">
     <div class="logo">
@@ -17,12 +18,14 @@
     </div>
     <ul>
         <li class="head">Отступ</li>
-        <li class="but">- 2 -</li>
-        <li class="but selected">- 4 -</li>
-        <li class="but">- 8 -</li>
+        <li class="but" value="2">- 2 -</li>
+        <li class="but selected" value="4">- 4 -</li>
+        <li class="but" value="8">- 8 -</li>
     </ul>
 </div>
 
+
+<script type="text/javascript" src="jquery-3.1.1.min.js"></script>
 <script type="text/javascript" src="index.js"></script>
 
 </html>

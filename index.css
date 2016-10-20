@@ -1,6 +1,7 @@
 body,
 body * {
     font-family: Arial;
+    font-size: 16px;
 }
 
 .main,
@@ -8,6 +9,18 @@ body * {
     position: absolute;
     top: 30px;
     bottom: 30px;
+}
+
+.error-field {
+    display: none;
+    color: red;
+    position: absolute;
+    top: 10px;
+    left: 50px;
+}
+
+.error-field.show {
+    display: block;
 }
 
 .main {
@@ -19,6 +32,12 @@ body * {
     height: 100%;
     width: 100%;
     overflow: scroll;
+    outline: none;
+    border: 1px solid lightgray;
+}
+
+.main .inout-text.error {
+    border: 1px solid red;
 }
 
 .menu {
