@@ -7,12 +7,12 @@ if (document.addEventListener) {
     document.body.innerText = "your browser does not support DOMContentLoaded event. Please use one of modern browsers";
 }
 
-function finder(elements, _index) {
+function bc(elements, _index) {
 
     var index = _index || 0;
 
     if (!elements) {
-        return finder(document);
+        return bc(document);
     }
 
     var current = {};
@@ -25,15 +25,15 @@ function finder(elements, _index) {
     return {
         byClass: function (className) {
             if (current.getElementsByClassName) {
-                return finder(current.getElementsByClassName(className) || {});
+                return bc(current.getElementsByClassName(className) || {});
             }
-            return finder({});
+            return bc({});
         },
         byId: function (idName) {
             if (current.getElementById) {
-                return finder([current.getElementById(idName) || {}]);
+                return bc([current.getElementById(idName) || {}]);
             }
-            return finder({});
+            return bc({});
         },
         elements: function () {
             return elements;
@@ -46,32 +46,50 @@ function finder(elements, _index) {
             for (var i = 0; i < elements.length; i++) {
                 elements[i][domEventName] = handler;
             }
+        },
+        addClass: function (className) {
+            $(elements).addClass(className);
+        },
+        removeClass: function (className) {
+            $(elements).removeClass(className);
+        },
+        val: function (arg) {
+            return h(arg, "val");
+        },
+        text: function (arg) {
+            return h(arg, "text");
+        }
+    };
+
+    function h(arg, func) {
+        if (arg) {
+            $(elements)[func](arg);
+        } else {
+            return $(elements)[func]();
         }
     }
 }
 
 function app() {
 
-    var textinput = $("#textinput");
-    var jButtons = $(".menu ul li.but");
-    var errorField = $("#error-field");
+    var errorField = bc().byId("error-field");
+    var buttons = bc().byClass("menu").byClass("but");
+    var textinput = bc().byId("textinput");
+
 
     bindEvents();
 
     function bindEvents() {
 
-        finder()
-            .byClass("menu")
-            .byClass("but")
-            .events("onclick", function () {
-                jButtons.removeClass('selected');
-                $(this).addClass('selected');
+        buttons.events("onclick", function () {
+            buttons.removeClass('selected');
+            bc(this).addClass('selected');
 
-                reformat(this.value);
-            });
+            reformat(this.value);
+        });
 
-        textinput.on("input", function () {
-            reformat(jButtons.parent().find(".selected")[0].value);
+        textinput.events("oninput", function () {
+            reformat(bc().byClass("menu").byClass("selected").elements()[0].value);
         });
 
     }
